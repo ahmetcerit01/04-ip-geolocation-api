@@ -10,7 +10,7 @@ import { fileURLToPath } from 'url';
 // 2. CONFIG
 dotenv.config();
 const app = express();
-const PORT = 3004;
+const PORT = process.env.PORT || 3004;
 
 // 3. __dirname tanımlama (ESM kullanıyorsak)
 const __filename = fileURLToPath(import.meta.url);
