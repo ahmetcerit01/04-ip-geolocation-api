@@ -1,21 +1,40 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>IP Geolocation</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <title>IP Geolocation Bilgileri</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"/>
 </head>
 <body class="p-5">
-  <div class="container">
-    <h1>IP Geolocation Bilgileri</h1>
-    <ul class="list-group">
-      <li class="list-group-item">IP: <strong><%= ipData.ip %></strong></li>
-      <li class="list-group-item">Ülke: <strong><%= ipData.country_name %></strong></li>
-      <li class="list-group-item">Şehir: <strong><%= ipData.city %></strong></li>
-      <li class="list-group-item">Bölge: <strong><%= ipData.region_name %></strong></li>
-      <li class="list-group-item">Posta Kodu: <strong><%= ipData.zip %></strong></li>
-    </ul>
-  </div>
+  <h1>IP Geolocation Bilgileri</h1>
+  <div id="output" class="mt-4"></div>
+
+  <script>
+    async function getIPDetails() {
+      // 1. Kendi IP'ni al
+      const ipRes = await fetch('https://api.ipify.org?format=json');
+      const ipData = await ipRes.json();
+      const ip = ipData.ip;
+
+      // 2. IPSTACK'ten detayları çek
+      const apiKey = '<YOUR_API_KEY>'; // Buraya API keyini yaz
+      const geoRes = await fetch(`http://api.ipstack.com/${ip}?access_key=${apiKey}`);
+      const geoData = await geoRes.json();
+
+      // 3. HTML'e yaz
+      document.getElementById('output').innerHTML = `
+        <ul class="list-group">
+          <li class="list-group-item"><strong>IP:</strong> ${geoData.ip}</li>
+          <li class="list-group-item"><strong>Ülke:</strong> ${geoData.country_name}</li>
+          <li class="list-group-item"><strong>Şehir:</strong> ${geoData.city}</li>
+          <li class="list-group-item"><strong>Bölge:</strong> ${geoData.region_name}</li>
+          <li class="list-group-item"><strong>Posta Kodu:</strong> ${geoData.zip}</li>
+        </ul>
+      `;
+    }
+
+    getIPDetails();
+  </script>
 </body>
 </html>
